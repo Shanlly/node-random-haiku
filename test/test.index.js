@@ -39,7 +39,8 @@ describe('Haiku', () => {
       if (err) {
         throw err;
       }
-       console.log(resp)
+
+      console.log(resp)
       let result = haiku.generate();
 
       should.exist(result);

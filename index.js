@@ -5,9 +5,9 @@ const natural = require('natural');
 const Tagger = natural.BrillPOSTagger;
 const tokenizer = new natural.WordTokenizer();
 
-const BASE = "./node_modules/natural/lib/natural/brill_pos_tagger";
-const RULES = BASE + "/data/English/tr_from_posjs.txt";
-const LEXICON = BASE + "/data/English/lexicon_from_posjs.json";
+const BASE = './node_modules/natural/lib/natural/brill_pos_tagger';
+const RULES = BASE + '/data/English/tr_from_posjs.txt';
+const LEXICON = BASE + '/data/English/lexicon_from_posjs.json';
 const DEFAULT_CATEGORY = 'N';
 
 function tagWords(wordArr, next) {
@@ -46,7 +46,9 @@ let Haiku = function () {
       };
     });
 
-    next(null, dataset);
+    if (next) {
+      next(null, dataset);
+    }
   }
 
   this.addToDataset = function (text, next) {
@@ -116,7 +118,7 @@ let Haiku = function () {
     }
 
     // Fixups for vowels
-    if (firstSentence[0] === 'a' && firstSentence[1].match(/^[aeiou]/i)) {
+    if (firstSentence[0] === 'a' && firstSentence[1].match(/^[aeiou]\w+/i)) {
       firstSentence[0] = 'an';
     }
 
