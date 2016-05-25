@@ -76,7 +76,7 @@ let Haiku = function () {
 
     // POS options listed here https://cs.nyu.edu/grishman/jet/guide/PennPOS.html
     // 5 syllables: DT - JJ - NN
-    // 7 syllables: PRP - RB - VBZ - RB
+    // 7 syllables: PRP - VBZ - RB - VBN
     // 5 syllables: VBN - VBG - RB
 
     first = [randomProp('DT'), randomProp('JJ'), randomProp('NN')];
@@ -91,7 +91,7 @@ let Haiku = function () {
       }
     }
 
-    second = [randomProp('PRP'), randomProp('RB'), randomProp('VBZ'), randomProp('RB')];
+    second = [randomProp('PRP'), randomProp('VBZ'), randomProp('RB'), randomProp('VBN')];
 
     for (let i = 0; i < second.length; i++) {
       let prop = second[i];
@@ -113,6 +113,11 @@ let Haiku = function () {
       if (syllableCountThird > 4) {
         break;
       }
+    }
+
+    // Fixups for vowels
+    if (firstSentence[0] === 'a' && firstSentence[1].match(/^[aeiou]/i)) {
+      firstSentence[0] = 'an';
     }
 
     return [firstSentence.join(' '), secondSentence.join(' '), thirdSentence.join(' ')];

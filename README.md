@@ -26,3 +26,7 @@ Generates random haikus. Very experimental. Not the greatest.
       //  'it quickly appears swiftly',
       //  'considered dancing'
     });
+
+## tests
+
+You can also run the sample set of words through `npm test`
