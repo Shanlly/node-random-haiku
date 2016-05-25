@@ -9,10 +9,10 @@ describe('Haiku', () => {
     let haiku = new Haiku();
     let sentence = 'The cat jumps on the table';
     let results = {
-      DT: { the: true },
-      NN: { cat: true, table: true },
-      NNS: { jumps: true },
-      IN: { on: true }
+      DT: { the: 1 },
+      NN: { cat: 1, table: 2 },
+      NNS: { jumps: 1 },
+      IN: { on: 1 }
     };
 
     haiku.addToDataset(sentence, (err, resp) => {

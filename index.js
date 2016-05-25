@@ -13,7 +13,6 @@ const DEFAULT_CATEGORY = 'N';
 function tagWords(wordArr, next) {
   let tagger = new Tagger(LEXICON, RULES, DEFAULT_CATEGORY, (err) => {
     if (err) {
-      console.log(err);
       return next(err);
     }
 
@@ -24,8 +23,24 @@ function tagWords(wordArr, next) {
 let Haiku = function () {
   let dataset = {};
 
+  function updateDataset(POSArr, next) {
+    POSArr.forEach((word) => {
+      word = word.reverse();
+      if (!dataset[word[0]]) {
+        dataset[word[0]] = {};
+      }
+
+      let wordItem = word[1].toLowerCase();
+
+      dataset[word[0]][wordItem] = syllable(wordItem);
+    });
+
+    next(null, dataset);
+  }
+
   this.addToDataset = function (text, next) {
     let wordArr = tokenizer.tokenize(text);
+
     tagWords(wordArr, (err, resp) => {
       if (err) {
         return next(err);
@@ -33,18 +48,12 @@ let Haiku = function () {
 
       let POSArr = JSON.parse(resp);
 
-      POSArr.forEach((word) => {
-        word = word.reverse();
-        console.log('++ ', word)
-        if (!dataset[word[0]]) {
-          dataset[word[0]] = {};
-        }
-
-        dataset[word[0]][word[1].toLowerCase()] = true;
-      });
-
-      next(null, dataset);
+      updateDataset(POSArr, next);
     });
+  };
+
+  this.generate = function () {
+
   };
 };
 
