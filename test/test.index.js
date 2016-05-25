@@ -7,12 +7,13 @@ const Haiku = require('../index.js');
 describe('Haiku', () => {
   it('should return POS data for a sentence', (done) => {
     let haiku = new Haiku();
-    let sentence = 'The cat jumps on the table';
+    let sentence = 'The furry cat jumps on the table';
     let results = {
-      DT: { the: 1 },
-      NN: { cat: 1, table: 2 },
-      NNS: { jumps: 1 },
-      IN: { on: 1 }
+      DT: { the: { word: 'the', count: 1 }},
+      NN: { cat: { word: 'cat', count: 1 }, table: { word: 'table', count: 2 }},
+      NNS: { jumps: { word: 'jumps', count: 1 }},
+      IN: { on: { word: 'on', count: 1 }},
+      JJ: { furry: { word: 'furry', count: 2 }}
     };
 
     haiku.addToDataset(sentence, (err, resp) => {
@@ -21,6 +22,28 @@ describe('Haiku', () => {
       }
 
       resp.should.deepEqual(results);
+      done();
+    });
+  });
+
+  it('should return POS data for a sentence', (done) => {
+    let haiku = new Haiku();
+    let sentence = 'the it awful nerd alone runs walks smart dumb chair ' +
+                   'sings considered a we seems appears they always tired amused ' +
+                   'sadness joy shakes knows glitter blue green quickly superb she he ' +
+                   'briskly firmly swiftly really writing laughing eating dancing ' +
+                   'forever never happy sad sleeping curious bored cat person it is';
+
+    haiku.addToDataset(sentence, (err, resp) => {
+      if (err) {
+        throw err;
+      }
+      console.log(resp)
+      let result = haiku.generate();
+
+      should.exist(result);
+      result.length.should.equal(3);
+      console.log(result)
       done();
     });
   });

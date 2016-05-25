@@ -23,6 +23,14 @@ function tagWords(wordArr, next) {
 let Haiku = function () {
   let dataset = {};
 
+  function randomProp(key) {
+    let dataKey = dataset[key];
+    let keys = Object.keys(dataKey);
+    let randKey = Math.floor(Math.random() * keys.length);
+
+    return dataKey[keys[randKey]];
+  }
+
   function updateDataset(POSArr, next) {
     POSArr.forEach((word) => {
       word = word.reverse();
@@ -32,7 +40,10 @@ let Haiku = function () {
 
       let wordItem = word[1].toLowerCase();
 
-      dataset[word[0]][wordItem] = syllable(wordItem);
+      dataset[word[0]][wordItem] = {
+        word: wordItem,
+        count: syllable(wordItem)
+      };
     });
 
     next(null, dataset);
@@ -53,7 +64,58 @@ let Haiku = function () {
   };
 
   this.generate = function () {
+    let syllableCountFirst = 0;
+    let syllableCountSecond = 0;
+    let syllableCountThird = 0;
+    let first;
+    let firstSentence = [];
+    let second;
+    let secondSentence = [];
+    let third;
+    let thirdSentence = [];
 
+    // POS options listed here https://cs.nyu.edu/grishman/jet/guide/PennPOS.html
+    // 5 syllables: DT - JJ - NN
+    // 7 syllables: PRP - RB - VBZ - RB
+    // 5 syllables: VBN - VBG - RB
+
+    first = [randomProp('DT'), randomProp('JJ'), randomProp('NN')];
+
+    for (let i = 0; i < first.length; i++) {
+      let prop = first[i];
+      syllableCountFirst += prop.count;
+      firstSentence.push(prop.word);
+
+      if (syllableCountFirst > 4) {
+        break;
+      }
+    }
+
+    second = [randomProp('PRP'), randomProp('RB'), randomProp('VBZ'), randomProp('RB')];
+
+    for (let i = 0; i < second.length; i++) {
+      let prop = second[i];
+      syllableCountSecond += prop.count;
+      secondSentence.push(prop.word);
+
+      if (syllableCountSecond > 5) {
+        break;
+      }
+    }
+
+    third = [randomProp('VBN'), randomProp('VBG'), randomProp('RB')];
+
+    for (let i = 0; i < third.length; i++) {
+      let prop = third[i];
+      syllableCountThird += prop.count;
+      thirdSentence.push(prop.word);
+
+      if (syllableCountThird > 4) {
+        break;
+      }
+    }
+
+    return [firstSentence.join(' '), secondSentence.join(' '), thirdSentence.join(' ')];
   };
 };
 
