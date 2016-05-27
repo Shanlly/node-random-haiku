@@ -24,8 +24,13 @@ Generates random haikus. Very experimental. Not the greatest.
 
       // ['a smart chair',
       //  'it quickly appears swiftly',
-      //  'considered dancing'
+      //  'considered dancing']
     });
+
+Other commands include:
+
+    haiku.getData(); // returns the current dataset
+    haiku.del('NN', 'tree'); // deletes a word from the dataset - you need to know what part-of-speech it is.
 
 ## tests
 

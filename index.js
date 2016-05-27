@@ -67,6 +67,16 @@ let Haiku = function () {
     });
   };
 
+  this.del = function (category, word) {
+    delete dataset[category.toUpperCase()][word];
+
+    return dataset;
+  }
+
+  this.getData = function () {
+    return dataset;
+  }
+
   this.generate = function () {
     let syllableCountFirst = 0;
     let syllableCountSecond = 0;

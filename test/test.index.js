@@ -40,12 +40,31 @@ describe('Haiku', () => {
         throw err;
       }
 
-      console.log(resp)
       let result = haiku.generate();
 
       should.exist(result);
       result.length.should.equal(3);
       console.log(result)
+      done();
+    });
+  });
+
+  it('should delete an unwanted word', (done) => {
+    let haiku = new Haiku();
+    let sentence = 'appears doomed';
+
+    haiku.addToDataset(sentence, (err, resp) => {
+      let result = { VBZ: { appears: { word: 'appears', count: 2 } },
+          VBN: { doomed: { word: 'doomed', count: 1 } } };
+
+      haiku.getData().should.deepEqual(result);
+
+      haiku.del('VBN', 'doomed');
+
+      result = { VBZ: { appears: { word: 'appears', count: 2 } }, VBN: { } };
+
+      haiku.getData().should.deepEqual(result);
+
       done();
     });
   });
