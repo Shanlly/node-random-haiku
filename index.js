@@ -40,15 +40,17 @@ let Haiku = function () {
 
       let wordItem = word[1].toLowerCase();
 
+      if (wordItem.length < 2 && word[0] !== 'DT') {
+        return;
+      }
+
       dataset[word[0]][wordItem] = {
         word: wordItem,
         count: syllable(wordItem)
       };
     });
 
-    if (next) {
-      next(null, dataset);
-    }
+    next(null, dataset);
   }
 
   this.addToDataset = function (text, next) {
@@ -100,7 +102,7 @@ let Haiku = function () {
       syllableCountSecond += prop.count;
       secondSentence.push(prop.word);
 
-      if (syllableCountSecond > 5) {
+      if (syllableCountSecond > 6) {
         break;
       }
     }

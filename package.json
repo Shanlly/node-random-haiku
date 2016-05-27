@@ -1,6 +1,6 @@
 {
   "name": "random-haiku",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Random haiku generator",
   "main": "index.js",
   "dependencies": {
