@@ -29,7 +29,8 @@ Generates random haikus. Very experimental. Not the greatest.
 
 Other commands include:
 
-    haiku.getData(); // returns the current dataset
+    haiku.getData(); // returns the current dataset.
+    haiku.del('PRP'); // deletes all the content from a particular part-of-speech.
     haiku.del('NN', 'tree'); // deletes a word from the dataset - you need to know what part-of-speech it is.
 
 ## tests

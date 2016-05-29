@@ -4,17 +4,22 @@ const should = require('should');
 
 const Haiku = require('../index.js');
 
+const currentResults = {
+  DT: { a: { word: 'a', count: 1 }, an: { word: 'an', count: 1 } },
+  JJ: { opulent: { word: 'opulent', count: 3 } },
+  VBN: { considered: { word: 'considered', count: 3} },
+  NN: { lemon: { word: 'lemon', count: 2 } },
+  PRP: { we: { word: 'we', count: 1 } },
+  VBZ: { refers: { word: 'refers', count: 2 } },
+  RB: { now: { word: 'now', count: 1 } },
+  VBG: { eating: { word: 'eating', count: 2 } }
+};
+
 describe('Haiku', () => {
   it('should return POS data for a sentence', (done) => {
     let haiku = new Haiku();
-    let sentence = 'The furry cat jumps on the table';
-    let results = {
-      DT: { the: { word: 'the', count: 1 }},
-      NN: { cat: { word: 'cat', count: 1 }, table: { word: 'table', count: 2 }},
-      NNS: { jumps: { word: 'jumps', count: 1 }},
-      IN: { on: { word: 'on', count: 1 }},
-      JJ: { furry: { word: 'furry', count: 2 }}
-    };
+    let sentence = 'a an opulent lemon we refers now considered eating';
+    let results = currentResults;
 
     haiku.addToDataset(sentence, (err, resp) => {
       if (err) {
@@ -28,12 +33,7 @@ describe('Haiku', () => {
 
   it('should return POS data for a sentence', (done) => {
     let haiku = new Haiku();
-    let sentence = 'appears doomed seems the it awful nerd alone runs walks smart dumb chair ' +
-                   'sings considered a we seems appears they always tired amused ' +
-                   'sadness joy shakes knows glitter blue green quickly superb she he ' +
-                   'them bike dog ' +
-                   'briskly firmly swiftly really writing laughing eating dancing ' +
-                   'forever never happy sad sleeping curious bored cat person it is';
+    let sentence = 'a an opulent lemon we refers now considered eating';
 
     haiku.addToDataset(sentence, (err, resp) => {
       if (err) {
@@ -54,6 +54,10 @@ describe('Haiku', () => {
     let sentence = 'appears doomed';
 
     haiku.addToDataset(sentence, (err, resp) => {
+      if (err) {
+        throw err;
+      }
+
       let result = { VBZ: { appears: { word: 'appears', count: 2 } },
           VBN: { doomed: { word: 'doomed', count: 1 } } };
 
@@ -65,6 +69,79 @@ describe('Haiku', () => {
 
       haiku.getData().should.deepEqual(result);
 
+      done();
+    });
+  });
+
+  it('should not include an unused part-of-speech', (done) => {
+    let haiku = new Haiku();
+    let sentence = 'verify';
+
+    haiku.addToDataset(sentence, (err, resp) => {
+      if (err) {
+        throw err;
+      }
+
+      let result = {};
+
+      haiku.getData().should.deepEqual(result);
+
+      done();
+    });
+  });
+
+  it('should use "an" for a vowel', (done) => {
+    let haiku = new Haiku();
+    let sentence = 'a an opulent lemon we refers now considered eating';
+    let results = currentResults;
+
+    haiku.addToDataset(sentence, (err, resp) => {
+      if (err) {
+        throw err;
+      }
+
+      let result = haiku.generate();
+
+      should.exist(result);
+      result.should.deepEqual([
+        'an opulent lemon',
+        'we refers now considered',
+        'considered eating'
+      ]);
+      console.log(result)
+      done();
+    });
+  });
+
+  it('should use "a" for a consonant ', (done) => {
+    let haiku = new Haiku();
+    let sentence = 'a an happy lemon we refers now considered eating';
+    let results = { DT: { a: { word: 'a', count: 1 }, an: { word: 'an', count: 1 } },
+      JJ: { happy: { word: 'happy', count: 2 } },
+      VBN: { considered: { word: 'considered', count: 3} },
+      NN: { lemon: { word: 'lemon', count: 2 } },
+      PRP: { we: { word: 'we', count: 1 } },
+      VBZ: { refers: { word: 'refers', count: 2 } },
+      RB: { now: { word: 'now', count: 1 } },
+      VBG: { eating: { word: 'eating', count: 2 } }
+    };
+
+    haiku.addToDataset(sentence, (err, resp) => {
+      if (err) {
+        throw err;
+      }
+
+      resp.should.deepEqual(results);
+
+      let result = haiku.generate();
+
+      should.exist(result);
+      result.should.deepEqual([
+        'a happy lemon',
+        'we refers now considered',
+        'considered eating'
+      ]);
+      console.log(result)
       done();
     });
   });

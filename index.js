@@ -9,6 +9,7 @@ const BASE = './node_modules/natural/lib/natural/brill_pos_tagger';
 const RULES = BASE + '/data/English/tr_from_posjs.txt';
 const LEXICON = BASE + '/data/English/lexicon_from_posjs.json';
 const DEFAULT_CATEGORY = 'N';
+const POS_REQUIRED = ['DT', 'JJ', 'NN', 'PRP', 'RB', 'VBG', 'VBN', 'VBZ'];
 
 function tagWords(wordArr, next) {
   let tagger = new Tagger(LEXICON, RULES, DEFAULT_CATEGORY, (err) => {
@@ -34,6 +35,12 @@ let Haiku = function () {
   function updateDataset(POSArr, next) {
     POSArr.forEach((word) => {
       word = word.reverse();
+
+      // Don't include any POS items that are not in the required list.
+      if (POS_REQUIRED.indexOf(word[0]) === -1) {
+        next(null, dataset);
+      }
+
       if (!dataset[word[0]]) {
         dataset[word[0]] = {};
       }
@@ -62,13 +69,16 @@ let Haiku = function () {
       }
 
       let POSArr = JSON.parse(resp);
-
       updateDataset(POSArr, next);
     });
   };
 
   this.del = function (category, word) {
-    delete dataset[category.toUpperCase()][word];
+    if (word) {
+      delete dataset[category.toUpperCase()][word];
+    } else {
+      delete dataset[category.toUpperCase()];
+    }
 
     return dataset;
   }
@@ -130,8 +140,10 @@ let Haiku = function () {
     }
 
     // Fixups for vowels
-    if (firstSentence[0] === 'a' && firstSentence[1].match(/^[aeiou]\w+/i)) {
+    if (firstSentence[1].match(/^[aeiou]\w+/i)) {
       firstSentence[0] = 'an';
+    } else {
+      firstSentence[0] = 'a';
     }
 
     return [firstSentence.join(' '), secondSentence.join(' '), thirdSentence.join(' ')];
