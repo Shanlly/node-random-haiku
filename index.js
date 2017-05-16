@@ -83,6 +83,10 @@ let Haiku = function () {
     return dataset;
   }
 
+  this.clear = function () {
+    dataset = {};
+  }
+
   this.getData = function () {
     return dataset;
   }
