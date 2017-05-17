@@ -150,7 +150,7 @@ let Haiku = function () {
       firstSentence[0] = 'a';
     }
 
-    return [firstSentence.join(' '), secondSentence.join(' '), thirdSentence.join(' ')];
+    return [firstSentence.join(' ')," ", secondSentence.join(' ')," ", thirdSentence.join(' ')];
   };
 };
 
